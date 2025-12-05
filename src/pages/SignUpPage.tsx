@@ -69,6 +69,10 @@ export function SignUpPage() {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("authToken", data.data.token);
       localStorage.setItem("uid", data.data.uid);
+      localStorage.setItem("displayName", formData.fullName);
+      localStorage.setItem("email", formData.email);
+
+      window.dispatchEvent(new Event("auth-change"));
 
       navigate(from);
     } catch (error) {
@@ -106,6 +110,14 @@ export function SignUpPage() {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("uid", data.data.uid);
       localStorage.setItem("authToken", idToken);
+
+      if (user.displayName)
+        localStorage.setItem("displayName", user.displayName);
+      if (user.email) localStorage.setItem("email", user.email);
+      if (user.photoURL) localStorage.setItem("photoURL", user.photoURL);
+
+      window.dispatchEvent(new Event("auth-change"));
+
       navigate(from);
     } catch (error: any) {
       console.error("Google Sign Up Failed", error);

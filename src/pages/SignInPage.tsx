@@ -63,6 +63,9 @@ export function SignInPage() {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("authToken", data.data.token);
       localStorage.setItem("uid", data.data.uid);
+      localStorage.setItem("email", formData.email); // Save email for profile
+
+      window.dispatchEvent(new Event("auth-change"));
 
       navigate(from); // Redirect to previous page or default
     } catch (error) {
@@ -97,9 +100,14 @@ export function SignInPage() {
       console.log("Google Sign In Success", data);
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("uid", data.data.uid);
-      localStorage.setItem("authToken", idToken); // Or data.data.token if backend returns a new one? Backend returns verified token info usually.
-      // The backend controller returns { uid, token: idToken } usually or similar.
-      // Let's check the controller again. It returns data: { uid, token: idToken } (implied from previous code structure, let's verify).
+      localStorage.setItem("authToken", idToken);
+
+      if (user.displayName)
+        localStorage.setItem("displayName", user.displayName);
+      if (user.email) localStorage.setItem("email", user.email);
+      if (user.photoURL) localStorage.setItem("photoURL", user.photoURL);
+
+      window.dispatchEvent(new Event("auth-change"));
 
       navigate(from);
     } catch (error: any) {

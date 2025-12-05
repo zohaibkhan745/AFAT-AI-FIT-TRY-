@@ -1,10 +1,56 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/Button";
 import { Shirt } from "lucide-react";
 import { cn } from "../lib/utils";
+import { UserMenu } from "./UserMenu";
+import { useState, useEffect } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 export function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{
+    displayName?: string | null;
+    email?: string | null;
+    photoURL?: string | null;
+  }>();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const isAuth = localStorage.getItem("isAuthenticated") === "true";
+      setIsAuthenticated(isAuth);
+      if (isAuth) {
+        setUser({
+          displayName: localStorage.getItem("displayName"),
+          email: localStorage.getItem("email"),
+          photoURL: localStorage.getItem("photoURL"),
+        });
+      }
+    };
+
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+    window.addEventListener("auth-change", checkAuth);
+
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("auth-change", checkAuth);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.clear();
+      setIsAuthenticated(false);
+      navigate("/signin");
+      window.dispatchEvent(new Event("auth-change"));
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -47,14 +93,19 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link to="/signin">
-            <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
-              Sign In
-            </Button>
-          </Link>
-          <Link to="/signup">
-            <Button size="sm">Get Started</Button>
-          </Link>
+          {isAuthenticated ? (
+            <UserMenu user={user} onLogout={handleLogout} />
+          ) : (
+            <Link to="/signin">
+              <Button
+                variant="primary"
+                size="sm"
+                className="hidden sm:inline-flex"
+              >
+                Sign In
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </nav>
