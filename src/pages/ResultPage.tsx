@@ -5,11 +5,14 @@ import { Download, RefreshCw, Ruler } from "lucide-react";
 
 export function ResultPage() {
   const location = useLocation();
-  const { userImage, outfitImage } = location.state || {};
+  const {
+    userImage,
+    outfitImage,
+    resultImage: generatedImage,
+  } = location.state || {};
 
-  // Placeholder for result image - in real app this comes from API
-  // Using userImage as placeholder if available, or a generic placeholder
-  const resultImage = userImage;
+  // Use the generated image from API, or fallback to userImage for preview if testing without API
+  const resultImage = generatedImage || userImage;
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-6">

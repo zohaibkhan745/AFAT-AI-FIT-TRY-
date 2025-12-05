@@ -6,6 +6,7 @@ A Virtual Try-On & Size Recommendation Web App built with React, Vite, TypeScrip
 
 - **Virtual Try-On**: Upload your photo and an outfit to see how it looks.
 - **Size Recommendation**: Get AI-powered size suggestions based on your measurements.
+- **Authentication**: Secure Sign In and Sign Up pages with modern UI.
 - **Camera Integration**: Capture photos directly from your device.
 - **Modern UI**: Clean, minimal, and responsive design.
 

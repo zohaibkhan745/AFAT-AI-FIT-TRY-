@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback } from "react";
 import { Button } from "./ui/Button";
-import { Camera, X, RefreshCw } from "lucide-react";
+import { X, RefreshCw } from "lucide-react";
 
 interface CameraCaptureProps {
   onCapture: (imageSrc: string) => void;

@@ -8,12 +8,29 @@ export function UploadPage() {
   const navigate = useNavigate();
   const [userImage, setUserImage] = useState<string | null>(null);
   const [outfitImage, setOutfitImage] = useState<string | null>(null);
+  const [userFile, setUserFile] = useState<File | null>(null);
+  const [outfitFile, setOutfitFile] = useState<File | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const dataURLtoFile = (dataurl: string, filename: string) => {
+    const arr = dataurl.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
 
   const handleUserImageSelect = (file: File | string) => {
     if (typeof file === "string") {
       setUserImage(file);
+      setUserFile(dataURLtoFile(file, "user-photo.jpg"));
     } else {
+      setUserFile(file);
       const reader = new FileReader();
       reader.onload = (e) => setUserImage(e.target?.result as string);
       reader.readAsDataURL(file);
@@ -23,22 +40,56 @@ export function UploadPage() {
   const handleOutfitImageSelect = (file: File | string) => {
     if (typeof file === "string") {
       setOutfitImage(file);
+      setOutfitFile(dataURLtoFile(file, "outfit-photo.jpg"));
     } else {
+      setOutfitFile(file);
       const reader = new FileReader();
       reader.onload = (e) => setOutfitImage(e.target?.result as string);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleGenerate = () => {
-    if (!userImage || !outfitImage) return;
+  const handleGenerate = async () => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    if (!isAuthenticated) {
+      navigate("/signin", { state: { from: "/upload" } });
+      return;
+    }
+
+    if (!userFile || !outfitFile) return;
 
     setIsGenerating(true);
-    // Simulate API call
-    setTimeout(() => {
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("userPhoto", userFile);
+      formData.append("outfitPhoto", outfitFile);
+
+      const response = await fetch("http://localhost:5001/api/tryon", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "Failed to generate try-on image");
+      }
+
+      navigate("/result", {
+        state: {
+          userImage,
+          outfitImage,
+          resultImage: data.generatedImage,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
       setIsGenerating(false);
-      navigate("/result", { state: { userImage, outfitImage } });
-    }, 2000);
+    }
   };
 
   return (
@@ -73,7 +124,12 @@ export function UploadPage() {
           </div>
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center justify-center">
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg border border-red-200 max-w-md text-center">
+              {error}
+            </div>
+          )}
           <Button
             size="lg"
             className="w-full md:w-auto min-w-[200px]"

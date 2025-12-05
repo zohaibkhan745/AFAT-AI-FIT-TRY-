@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Upload, Camera, X, Image as ImageIcon } from "lucide-react";
+import { Upload, Camera, X } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Card } from "./ui/Card";
 import { CameraCapture } from "./CameraCapture";
