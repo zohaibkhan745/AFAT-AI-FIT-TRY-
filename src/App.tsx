@@ -11,6 +11,7 @@ import { UploadPage } from "./pages/UploadPage";
 import { ResultPage } from "./pages/ResultPage";
 import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
+import { SizeMeasurementPage } from "./pages/SizeMeasurementPage";
 
 // Layout wrapper to conditionally hide Navbar on auth pages
 function Layout() {
@@ -27,6 +28,7 @@ function Layout() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/result" element={<ResultPage />} />
+        <Route path="/measure" element={<SizeMeasurementPage />} />
       </Routes>
     </div>
   );

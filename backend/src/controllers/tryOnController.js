@@ -1,5 +1,5 @@
-import callBananaApi from "../utils/callBananaApi.js";
-import callGeminiDirectly from "../utils/callGeminiDirectly.js";
+import callReplicate from "../utils/callReplicate.js";
+import { preprocessTryOnImages } from "../utils/preprocessImages.js";
 
 export const generateTryOn = async (req, res) => {
   try {
@@ -18,47 +18,28 @@ export const generateTryOn = async (req, res) => {
     const userPhotoBase64 = userPhotoFile.buffer.toString("base64");
     const outfitPhotoBase64 = outfitPhotoFile.buffer.toString("base64");
 
-    // Call the external API
-    let generatedImageBase64;
-    try {
-      // Check if the key looks like a Google Key
-      if (
-        process.env.BANANA_API_KEY &&
-        process.env.BANANA_API_KEY.startsWith("AIza")
-      ) {
-        console.log("Detected Google API Key. Attempting to use Gemini...");
-        generatedImageBase64 = await callGeminiDirectly(
-          userPhotoBase64,
-          outfitPhotoBase64
-        );
-      } else {
-        generatedImageBase64 = await callBananaApi(
-          userPhotoBase64,
-          outfitPhotoBase64
-        );
-      }
-    } catch (apiError) {
-      console.error(
-        "API Call Failed, falling back to mock response for demonstration:",
-        apiError.message
-      );
-      // Fallback to user photo so the UI flow continues
-      generatedImageBase64 = userPhotoBase64;
-    }
+    let generatedImageUrl;
 
-    // Ensure the output is a proper data URL if it isn't already
-    let outputImage = generatedImageBase64;
-    if (outputImage && !outputImage.startsWith("data:image")) {
-      outputImage = `data:image/png;base64,${generatedImageBase64}`;
-    } else if (!outputImage) {
-      // If Gemini returned null or undefined
-      outputImage = `data:image/png;base64,${userPhotoBase64}`;
+    try {
+      // --- PREPROCESSING STEP ---
+      console.log("Preprocessing images...");
+      const { human_img, garm_img } = await preprocessTryOnImages(
+        userPhotoBase64,
+        outfitPhotoBase64
+      );
+
+      // Call Replicate (IDM-VTON) with processed images
+      generatedImageUrl = await callReplicate(human_img, garm_img);
+    } catch (apiError) {
+      console.error("API Call Failed Detailed Error:", apiError);
+      // Fallback to user photo if API fails (so app doesn't crash)
+      generatedImageUrl = `data:image/jpeg;base64,${userPhotoBase64}`;
     }
 
     // Return success response
     res.json({
       success: true,
-      generatedImage: outputImage,
+      generatedImage: generatedImageUrl, // Replicate returns a URL
     });
   } catch (error) {
     console.error("Try-On Controller Error:", error);

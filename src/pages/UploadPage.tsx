@@ -66,7 +66,8 @@ export function UploadPage() {
       formData.append("userPhoto", userFile);
       formData.append("outfitPhoto", outfitFile);
 
-      const response = await fetch("http://localhost:5001/api/tryon", {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      const response = await fetch(`${API_URL}/api/tryon`, {
         method: "POST",
         body: formData,
       });
@@ -106,15 +107,15 @@ export function UploadPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <div className="h-[500px]">
+          <div>
             <ImageUpload
               title="Upload Your Photo"
               onImageSelect={handleUserImageSelect}
               preview={userImage || undefined}
-              allowCamera={true}
+              allowCamera={false}
             />
           </div>
-          <div className="h-[500px]">
+          <div>
             <ImageUpload
               title="Upload Outfit Image"
               onImageSelect={handleOutfitImageSelect}

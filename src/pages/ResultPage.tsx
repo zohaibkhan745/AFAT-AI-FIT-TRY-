@@ -1,7 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { Button } from "../components/ui/Button";
-import { Card } from "../components/ui/Card";
-import { Download, RefreshCw, Ruler } from "lucide-react";
+import { Download, RefreshCw } from "lucide-react";
 
 export function ResultPage() {
   const location = useLocation();
@@ -13,6 +12,17 @@ export function ResultPage() {
 
   // Use the generated image from API, or fallback to userImage for preview if testing without API
   const resultImage = generatedImage || userImage;
+
+  const handleDownload = () => {
+    if (!resultImage) return;
+
+    const link = document.createElement("a");
+    link.href = resultImage;
+    link.download = "virtual-try-on-result.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-6">
@@ -71,42 +81,17 @@ export function ResultPage() {
               )}
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-8">
-                <Button variant="secondary" className="mr-4">
+                <Button
+                  variant="secondary"
+                  className="mr-4"
+                  onClick={handleDownload}
+                >
                   <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Size Recommendation */}
-        <Card className="mb-12 bg-gradient-to-br from-purple-50 to-blue-50 border-purple-100">
-          <div className="p-8 flex flex-col md:flex-row items-center gap-8">
-            <div className="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center text-purple-600 shrink-0">
-              <Ruler size={32} />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Recommended Size For You
-              </h3>
-              <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
-                <span className="text-4xl font-bold text-purple-600">L</span>
-                <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">
-                  92% Match
-                </span>
-              </div>
-              <p className="text-gray-600 text-sm">
-                Based on your body measurements: Shoulder <strong>42cm</strong>,
-                Chest <strong>98cm</strong>, Waist <strong>82cm</strong>
-              </p>
-            </div>
-            <div className="text-right hidden md:block">
-              <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
-                Powered by AI Sizing
-              </p>
-            </div>
-          </div>
-        </Card>
 
         <div className="flex justify-center gap-4">
           <Link to="/upload">

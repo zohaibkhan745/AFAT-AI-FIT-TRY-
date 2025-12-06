@@ -48,10 +48,6 @@ export function HomePage() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
-              <span>Size Recommendations</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-green-500" />
               <span>Instant Results</span>
             </div>
           </div>

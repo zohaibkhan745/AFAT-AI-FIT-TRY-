@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
-import { Upload, Camera, X } from "lucide-react";
+import { Upload, Camera, X, Image as ImageIcon } from "lucide-react";
 import { Button } from "./ui/Button";
-import { Card } from "./ui/Card";
 import { CameraCapture } from "./CameraCapture";
 import { cn } from "../lib/utils";
 
@@ -52,90 +51,86 @@ export function ImageUpload({
   };
 
   return (
-    <>
-      <Card className="h-full flex flex-col overflow-hidden">
-        <div className="p-6 border-b border-gray-100">
-          <h3 className="font-semibold text-lg text-gray-900">{title}</h3>
-        </div>
-
-        <div className="flex-1 p-6 flex flex-col">
-          {preview ? (
-            <div className="relative flex-1 rounded-xl overflow-hidden bg-gray-50 group">
-              <img
-                src={preview}
-                alt="Preview"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onImageSelect("")} // Clear image logic needs to be handled by parent really, but passing empty string or null
-                >
-                  <X className="mr-2 h-4 w-4" /> Remove
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div
-              className={cn(
-                "flex-1 border-2 border-dashed rounded-xl flex flex-col items-center justify-center p-8 transition-colors cursor-pointer",
-                isDragging
-                  ? "border-primary bg-primary/5"
-                  : "border-gray-200 hover:border-primary/50 hover:bg-gray-50"
-              )}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
-                <Upload size={32} />
-              </div>
-              <p className="text-sm font-medium text-gray-900 mb-1">
-                Click or drag image here
-              </p>
-              <p className="text-xs text-gray-500 text-center max-w-[200px]">
-                Supports JPG, PNG, WEBP (Max 5MB)
-              </p>
-              <input
-                type="file"
-                ref={fileInputRef}
-                className="hidden"
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-            </div>
-          )}
-
-          {allowCamera && !preview && (
-            <div className="mt-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-gray-500">Or</span>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                className="w-full mt-4"
-                onClick={() => setShowCamera(true)}
-              >
-                <Camera className="mr-2 h-4 w-4" /> Use Camera
-              </Button>
-            </div>
-          )}
-        </div>
-      </Card>
-
+    <div className="w-full">
       {showCamera && (
         <CameraCapture
           onCapture={handleCameraCapture}
           onClose={() => setShowCamera(false)}
         />
       )}
-    </>
+
+      <div
+        className={cn(
+          "relative border-2 border-dashed rounded-2xl p-8 transition-all duration-300 ease-in-out text-center group",
+          isDragging
+            ? "border-primary bg-primary/5 scale-[1.01]"
+            : "border-gray-200 hover:border-primary/30 hover:bg-gray-50/50",
+          preview
+            ? "border-none p-0 overflow-hidden bg-gray-100 shadow-inner"
+            : ""
+        )}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {preview ? (
+          <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden">
+            <img
+              src={preview}
+              alt="Preview"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onImageSelect("");
+              }}
+              className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white text-gray-900 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform hover:scale-110"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-6 py-8">
+            <div className="w-20 h-20 bg-primary/5 text-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+              <Upload size={36} />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+              <p className="text-sm text-gray-500 mt-2">
+                Drag and drop or click to upload
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full sm:w-auto rounded-xl"
+              >
+                <ImageIcon className="mr-2 h-4 w-4" /> Select File
+              </Button>
+              {allowCamera && (
+                <Button
+                  variant="secondary"
+                  onClick={() => setShowCamera(true)}
+                  className="w-full sm:w-auto rounded-xl"
+                >
+                  <Camera className="mr-2 h-4 w-4" /> Use Camera
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+      </div>
+    </div>
   );
 }
