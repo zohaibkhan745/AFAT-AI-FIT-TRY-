@@ -15,12 +15,28 @@ const PORT = process.env.PORT || 5001;
 // Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      "https://*.vercel.app",
-      process.env.FRONTEND_URL,
-    ].filter(Boolean),
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://afat-ai-fit-try.vercel.app",
+        process.env.FRONTEND_URL,
+      ].filter(Boolean);
+
+      // Allow requests with no origin (like mobile apps or Postman)
+      if (!origin) return callback(null, true);
+
+      // Allow all Vercel preview deployments
+      if (origin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   })
 );
