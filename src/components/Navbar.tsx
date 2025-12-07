@@ -91,12 +91,9 @@ export function Navbar() {
           <Link to="/check-size" className={getLinkClasses("/check-size")}>
             Check Size
           </Link>
-          <a
-            href="#"
-            className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors"
-          >
+          <Link to="/how-it-works" className={getLinkClasses("/how-it-works")}>
             How it Works
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Actions */}
@@ -167,13 +164,18 @@ export function Navbar() {
             >
               Check Size
             </Link>
-            <a
-              href="#"
-              className="block py-2 px-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            <Link
+              to="/how-it-works"
+              className={cn(
+                "block py-2 px-3 rounded-lg transition-colors",
+                isActive("/how-it-works")
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              )}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               How it Works
-            </a>
+            </Link>
             {!isAuthenticated && (
               <Link
                 to="/signin"

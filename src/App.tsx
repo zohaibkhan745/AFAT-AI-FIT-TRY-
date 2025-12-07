@@ -13,6 +13,7 @@ import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
 import { SizeMeasurementPage } from "./pages/SizeMeasurementPage";
 import { CheckSizePage } from "./pages/CheckSizePage";
+import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Layout wrapper to conditionally hide Navbar on auth pages
@@ -32,6 +33,7 @@ function Layout() {
         <Route path="/result" element={<ResultPage />} />
         <Route path="/measure" element={<SizeMeasurementPage />} />
         <Route path="/check-size" element={<CheckSizePage />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
       </Routes>
     </div>
   );
