@@ -7,6 +7,8 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env for local development (Railway injects env vars directly)
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 console.log("Firebase Config Loaded:");
@@ -17,11 +19,26 @@ console.log(
   process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.length : 0
 );
 
+// Validate required environment variables
+const requiredEnvVars = [
+  "FIREBASE_PROJECT_ID",
+  "FIREBASE_CLIENT_EMAIL",
+  "FIREBASE_PRIVATE_KEY",
+];
+
+const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
+if (missingVars.length > 0) {
+  throw new Error(
+    `Missing required environment variables: ${missingVars.join(", ")}. ` +
+      `Please configure these in Railway's Variables settings.`
+  );
+}
+
 // Initialize Firebase Admin SDK
 const serviceAccount = {
   project_id: process.env.FIREBASE_PROJECT_ID,
   client_email: process.env.FIREBASE_CLIENT_EMAIL,
-  private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+  private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
 };
 
 if (!admin.apps.length) {

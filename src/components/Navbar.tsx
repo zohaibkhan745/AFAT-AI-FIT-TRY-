@@ -84,6 +84,9 @@ export function Navbar() {
           <Link to="/upload" className={getLinkClasses("/upload")}>
             Try On
           </Link>
+          <Link to="/check-size" className={getLinkClasses("/check-size")}>
+            Check Size
+          </Link>
           <a
             href="#"
             className="text-sm font-medium text-gray-600 hover:text-primary transition-colors"

@@ -53,7 +53,8 @@ export function SignUpPage() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:5001/auth/signup", {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      const response = await fetch(`${API_URL}/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -94,7 +95,8 @@ export function SignUpPage() {
       const user = await signInWithGoogle();
       const idToken = await user.getIdToken();
 
-      const response = await fetch("http://localhost:5001/auth/google", {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+      const response = await fetch(`${API_URL}/auth/google`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
