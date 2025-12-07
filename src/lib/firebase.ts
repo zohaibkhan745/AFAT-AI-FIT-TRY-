@@ -10,6 +10,18 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+console.log('Firebase Config Check:', {
+  hasApiKey: !!firebaseConfig.apiKey,
+  hasAuthDomain: !!firebaseConfig.authDomain,
+  hasProjectId: !!firebaseConfig.projectId,
+  apiKeyPrefix: firebaseConfig.apiKey?.substring(0, 10)
+});
+
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  console.error('Missing Firebase environment variables! Check Vercel settings.');
+  console.error('Available env vars:', Object.keys(import.meta.env));
+}
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
