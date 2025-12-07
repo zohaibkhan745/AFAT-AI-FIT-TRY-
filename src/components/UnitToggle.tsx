@@ -1,4 +1,3 @@
-import { Ruler } from "lucide-react";
 import { cn } from "../lib/utils";
 
 interface UnitToggleProps {

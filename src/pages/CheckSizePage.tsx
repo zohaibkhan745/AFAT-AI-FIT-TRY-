@@ -17,7 +17,6 @@ export function CheckSizePage() {
     height: number;
     confidence: number;
   } | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   // Calibration state
   const [calibrationMode, setCalibrationMode] = useState<
@@ -44,14 +43,12 @@ export function CheckSizePage() {
       reader.readAsDataURL(file);
     }
     setResult(null);
-    setError(null);
   };
 
   const handleMeasure = async () => {
     if (!imageFile) return;
 
     setIsMeasuring(true);
-    setError(null);
 
     try {
       const formData = new FormData();
@@ -83,7 +80,6 @@ export function CheckSizePage() {
       });
     } catch (err) {
       console.error(err);
-      setError("Failed to measure height. Please try again.");
     } finally {
       setIsMeasuring(false);
     }
