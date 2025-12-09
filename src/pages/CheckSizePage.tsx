@@ -97,16 +97,26 @@ export function CheckSizePage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6 bg-gray-50">
+    <div className="min-h-screen pt-24 pb-12 px-6 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Check Your Size
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Upload a full-body photo or use your camera. We'll measure your
             height accurately and show results in cm and inches.
           </p>
+          {/* Coming Soon Badge */}
+          <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 dark:from-purple-500/20 dark:to-blue-500/20 border border-purple-200 dark:border-purple-700 rounded-full">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+            </span>
+            <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+              Coming Soon
+            </span>
+          </div>
         </div>
 
         {/* Main Content Grid */}
