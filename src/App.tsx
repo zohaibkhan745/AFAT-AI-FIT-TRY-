@@ -22,7 +22,7 @@ function Layout() {
   const isAuthPage = ["/signin", "/signup"].includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors">
       {!isAuthPage && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />

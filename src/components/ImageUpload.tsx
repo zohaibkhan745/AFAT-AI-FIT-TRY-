@@ -63,10 +63,10 @@ export function ImageUpload({
         className={cn(
           "relative border-2 border-dashed rounded-2xl p-8 transition-all duration-300 ease-in-out text-center group",
           isDragging
-            ? "border-primary bg-primary/5 scale-[1.01]"
-            : "border-gray-200 hover:border-primary/30 hover:bg-gray-50/50",
+            ? "border-primary bg-primary/5 dark:bg-primary/10 scale-[1.01]"
+            : "border-gray-200 dark:border-gray-700 hover:border-primary/30 dark:hover:border-primary/50 hover:bg-gray-50/50 dark:hover:bg-gray-800/50",
           preview
-            ? "border-none p-0 overflow-hidden bg-gray-100 shadow-inner"
+            ? "border-none p-0 overflow-hidden bg-gray-100 dark:bg-gray-800 shadow-inner"
             : ""
         )}
         onDragOver={handleDragOver}
@@ -86,19 +86,21 @@ export function ImageUpload({
                 e.stopPropagation();
                 onImageSelect("");
               }}
-              className="absolute top-4 right-4 p-2 bg-white/90 hover:bg-white text-gray-900 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform hover:scale-110"
+              className="absolute top-4 right-4 p-2 bg-white/90 dark:bg-gray-900/90 hover:bg-white dark:hover:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform hover:scale-110"
             >
               <X size={20} />
             </button>
           </div>
         ) : (
           <div className="space-y-6 py-8">
-            <div className="w-20 h-20 bg-primary/5 text-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+            <div className="w-20 h-20 bg-primary/5 dark:bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
               <Upload size={36} />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-              <p className="text-sm text-gray-500 mt-2">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300">
+                {title}
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 transition-colors duration-300">
                 Drag and drop or click to upload
               </p>
             </div>

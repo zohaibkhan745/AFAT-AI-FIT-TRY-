@@ -1,7 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/Button";
 import { Shirt, Menu, X } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
 import { cn } from "../lib/utils";
 import { UserMenu } from "./UserMenu";
 import { useState, useEffect } from "react";
@@ -63,7 +62,7 @@ export function Navbar() {
       "text-sm font-medium transition-colors relative py-1",
       isActive(path)
         ? "text-primary after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:rounded-full"
-        : "text-gray-600 hover:text-primary"
+        : "text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
     );
   };
 
@@ -72,10 +71,10 @@ export function Navbar() {
       <div className="container mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
-            <Shirt size={20} />
+          <div className="w-8 h-8 !rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 dark:from-purple-500 dark:to-blue-500 flex items-center justify-center text-white shadow-lg transition-all duration-300">
+            <Shirt size={20} strokeWidth={2.5} className="shrink-0" />
           </div>
-          <span className="text-lg sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600">
+          <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white transition-colors duration-300">
             AI Fit & Try
           </span>
         </Link>
@@ -98,7 +97,6 @@ export function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
           {isAuthenticated ? (
             <UserMenu user={user} onLogout={handleLogout} />
           ) : (
@@ -112,7 +110,6 @@ export function Navbar() {
 
         {/* Mobile Actions */}
         <div className="flex md:hidden items-center gap-2">
-          <ThemeToggle />
           {isAuthenticated && <UserMenu user={user} onLogout={handleLogout} />}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

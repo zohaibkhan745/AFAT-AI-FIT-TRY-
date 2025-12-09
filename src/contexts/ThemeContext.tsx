@@ -3,7 +3,7 @@ import {
   useContext,
   useEffect,
   useState,
-  ReactNode,
+  type ReactNode,
 } from "react";
 
 type Theme = "light" | "dark" | "system";
@@ -19,7 +19,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(() => {
     const saved = localStorage.getItem("theme") as Theme;
-    return saved || "system";
+    return saved || "light"; // Default to light mode
   });
 
   const [effectiveTheme, setEffectiveTheme] = useState<"light" | "dark">(
@@ -42,8 +42,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
 
       setEffectiveTheme(resolvedTheme);
+
+      // Remove both classes first
       root.classList.remove("light", "dark");
-      root.classList.add(resolvedTheme);
+
+      // Only add dark class if needed (Tailwind's default is light)
+      if (resolvedTheme === "dark") {
+        root.classList.add("dark");
+      }
     };
 
     updateTheme();

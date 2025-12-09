@@ -16,8 +16,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20",
       secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
       outline:
-        "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
+        "border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
+      ghost:
+        "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100",
     };
 
     const sizes = {

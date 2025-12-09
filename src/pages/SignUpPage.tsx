@@ -183,18 +183,24 @@ export function SignUpPage() {
         />
 
         {errors.form && (
-          <div className="p-3 rounded-lg bg-red-50 text-red-600 text-sm text-center">
+          <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm text-center border border-red-200 dark:border-red-800 transition-colors">
             {errors.form}
           </div>
         )}
 
-        <div className="text-xs text-gray-500 text-center px-4">
+        <div className="text-xs text-gray-500 dark:text-gray-400 text-center px-4 transition-colors">
           By signing up you agree to our{" "}
-          <a href="#" className="text-primary hover:underline">
+          <a
+            href="#"
+            className="text-primary hover:underline transition-colors"
+          >
             Terms
           </a>{" "}
           &{" "}
-          <a href="#" className="text-primary hover:underline">
+          <a
+            href="#"
+            className="text-primary hover:underline transition-colors"
+          >
             Privacy Policy
           </a>
           .
@@ -220,11 +226,11 @@ export function SignUpPage() {
         isLoading={isLoading}
       />
 
-      <div className="mt-8 text-center text-sm text-gray-500">
+      <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400 transition-colors">
         Already have an account?{" "}
         <Link
           to="/signin"
-          className="font-semibold text-primary hover:underline"
+          className="font-semibold text-primary hover:underline transition-colors"
         >
           Sign in
         </Link>

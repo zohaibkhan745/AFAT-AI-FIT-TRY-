@@ -288,7 +288,7 @@ export function HowItWorksPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto border-white text-white hover:bg-white/10"
+                  className="w-full sm:w-auto bg-white/10 border-white text-white hover:bg-white hover:text-primary transition-colors"
                 >
                   Check Your Size
                 </Button>

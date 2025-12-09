@@ -2,8 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImageUpload } from "../components/ImageUpload";
 import { Button } from "../components/ui/Button";
-import { Wand2 } from "lucide-react";
+import { Wand2, Sparkles } from "lucide-react";
+import demoPersonImg from "../assets/full body gemini.png"; // or .png
+import demoOutfitImg from "../assets/red_sweater.png"; // or .png
 
+// Demo images - you can replace these URLs with your actual demo images
+const DEMO_PERSON_IMAGE = demoPersonImg;
+const DEMO_OUTFIT_IMAGE = demoOutfitImg;
 export function UploadPage() {
   const navigate = useNavigate();
   const [userImage, setUserImage] = useState<string | null>(null);
@@ -23,6 +28,13 @@ export function UploadPage() {
       u8arr[n] = bstr.charCodeAt(n);
     }
     return new File([u8arr], filename, { type: mime });
+  };
+
+  // Convert URL to File object
+  const urlToFile = async (url: string, filename: string): Promise<File> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
   };
 
   const handleUserImageSelect = (file: File | string) => {
@@ -46,6 +58,23 @@ export function UploadPage() {
       const reader = new FileReader();
       reader.onload = (e) => setOutfitImage(e.target?.result as string);
       reader.readAsDataURL(file);
+    }
+  };
+
+  const loadDemoImages = async () => {
+    try {
+      // Load demo person image
+      const personFile = await urlToFile(DEMO_PERSON_IMAGE, "demo-person.jpg");
+      setUserFile(personFile);
+      setUserImage(DEMO_PERSON_IMAGE);
+
+      // Load demo outfit image
+      const outfitFile = await urlToFile(DEMO_OUTFIT_IMAGE, "demo-outfit.jpg");
+      setOutfitFile(outfitFile);
+      setOutfitImage(DEMO_OUTFIT_IMAGE);
+    } catch (err) {
+      console.error("Failed to load demo images:", err);
+      setError("Failed to load demo images. Please try uploading your own.");
     }
   };
 
@@ -94,16 +123,30 @@ export function UploadPage() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-6">
+    <div className="min-h-screen pt-24 pb-12 px-6 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">
             Create Your Virtual Look
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto transition-colors">
             Upload a full-body photo of yourself and the outfit you want to try
             on. Our AI will do the magic.
           </p>
+        </div>
+
+        {/* Demo Images Button */}
+        <div className="mb-8 flex justify-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadDemoImages}
+            className="gap-2"
+          >
+            <Sparkles className="h-4 w-4" />
+            <span className="hidden sm:inline">Try with Demo Images</span>
+            <span className="sm:hidden">Demo Images</span>
+          </Button>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -127,7 +170,7 @@ export function UploadPage() {
 
         <div className="flex flex-col items-center justify-center">
           {error && (
-            <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg border border-red-200 max-w-md text-center">
+            <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-800 max-w-md text-center transition-colors">
               {error}
             </div>
           )}

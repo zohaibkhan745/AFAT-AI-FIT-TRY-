@@ -171,7 +171,7 @@ export function SignInPage() {
         </div>
 
         {errors.form && (
-          <div className="p-3 rounded-lg bg-red-50 text-red-600 text-sm text-center">
+          <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm text-center border border-red-200 dark:border-red-800 transition-colors">
             {errors.form}
           </div>
         )}
@@ -196,11 +196,11 @@ export function SignInPage() {
         isLoading={isLoading}
       />
 
-      <div className="mt-8 text-center text-sm text-gray-500">
+      <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-300 transition-colors">
         Don't have an account?{" "}
         <Link
           to="/signup"
-          className="font-semibold text-primary hover:underline"
+          className="font-semibold text-primary dark:text-purple-400 hover:underline transition-colors"
         >
           Create account
         </Link>
