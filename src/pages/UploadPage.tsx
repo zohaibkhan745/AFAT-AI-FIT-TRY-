@@ -30,13 +30,6 @@ export function UploadPage() {
     return new File([u8arr], filename, { type: mime });
   };
 
-  // Convert image URL/path to File object
-  const urlToFile = async (url: string, filename: string): Promise<File> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new File([blob], filename, { type: blob.type });
-  };
-
   // Convert imported image to base64 data URL
   const imageToDataURL = async (imagePath: string): Promise<string> => {
     return new Promise((resolve, reject) => {
