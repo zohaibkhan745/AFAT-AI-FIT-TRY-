@@ -30,11 +30,29 @@ export function UploadPage() {
     return new File([u8arr], filename, { type: mime });
   };
 
-  // Convert URL to File object
+  // Convert image URL/path to File object
   const urlToFile = async (url: string, filename: string): Promise<File> => {
     const response = await fetch(url);
     const blob = await response.blob();
     return new File([blob], filename, { type: blob.type });
+  };
+
+  // Convert imported image to base64 data URL
+  const imageToDataURL = async (imagePath: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.onerror = reject;
+      img.src = imagePath;
+    });
   };
 
   const handleUserImageSelect = (file: File | string) => {
@@ -63,15 +81,19 @@ export function UploadPage() {
 
   const loadDemoImages = async () => {
     try {
-      // Load demo person image
-      const personFile = await urlToFile(DEMO_PERSON_IMAGE, "demo-person.jpg");
-      setUserFile(personFile);
-      setUserImage(DEMO_PERSON_IMAGE);
+      // Convert imported images to base64 data URLs
+      const personDataURL = await imageToDataURL(DEMO_PERSON_IMAGE);
+      const outfitDataURL = await imageToDataURL(DEMO_OUTFIT_IMAGE);
 
-      // Load demo outfit image
-      const outfitFile = await urlToFile(DEMO_OUTFIT_IMAGE, "demo-outfit.jpg");
+      // Convert data URLs to File objects
+      const personFile = dataURLtoFile(personDataURL, "demo-person.png");
+      const outfitFile = dataURLtoFile(outfitDataURL, "demo-outfit.png");
+
+      // Set the states
+      setUserFile(personFile);
+      setUserImage(personDataURL);
       setOutfitFile(outfitFile);
-      setOutfitImage(DEMO_OUTFIT_IMAGE);
+      setOutfitImage(outfitDataURL);
     } catch (err) {
       console.error("Failed to load demo images:", err);
       setError("Failed to load demo images. Please try uploading your own.");
