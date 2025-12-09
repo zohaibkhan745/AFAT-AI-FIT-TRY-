@@ -57,23 +57,36 @@ export function UploadPage() {
   const loadDemoImages = async () => {
     try {
       setError(null);
-      
-      // Fetch the imported images and convert to File objects
-      const personResponse = await fetch(DEMO_PERSON_IMAGE);
-      const personBlob = await personResponse.blob();
-      const personFile = new File([personBlob], "demo-person.png", { type: personBlob.type });
-      
-      const outfitResponse = await fetch(DEMO_OUTFIT_IMAGE);
-      const outfitBlob = await outfitResponse.blob();
-      const outfitFile = new File([outfitBlob], "demo-outfit.png", { type: outfitBlob.type });
 
-      // Set the files
+      // Helper function to convert blob to data URL
+      const blobToDataURL = (blob: Blob): Promise<string> => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      };
+
+      // Fetch and convert person image
+      const personResponse = await fetch(DEMO_PERSON_IMAGE);
+      if (!personResponse.ok) throw new Error("Failed to fetch person image");
+      const personBlob = await personResponse.blob();
+      const personDataURL = await blobToDataURL(personBlob);
+      const personFile = dataURLtoFile(personDataURL, "demo-person.png");
+
+      // Fetch and convert outfit image
+      const outfitResponse = await fetch(DEMO_OUTFIT_IMAGE);
+      if (!outfitResponse.ok) throw new Error("Failed to fetch outfit image");
+      const outfitBlob = await outfitResponse.blob();
+      const outfitDataURL = await blobToDataURL(outfitBlob);
+      const outfitFile = dataURLtoFile(outfitDataURL, "demo-outfit.png");
+
+      // Set the files and previews
       setUserFile(personFile);
+      setUserImage(personDataURL);
       setOutfitFile(outfitFile);
-      
-      // Set preview images (use the imported URLs directly)
-      setUserImage(DEMO_PERSON_IMAGE);
-      setOutfitImage(DEMO_OUTFIT_IMAGE);
+      setOutfitImage(outfitDataURL);
     } catch (err) {
       console.error("Failed to load demo images:", err);
       setError("Failed to load demo images. Please try uploading your own.");
