@@ -189,6 +189,14 @@ export function UploadPage() {
               {error}
             </div>
           )}
+          {isGenerating && (
+            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800 max-w-md text-center transition-colors">
+              <p className="font-medium">
+                Please wait, we're creating your virtual try-on...
+              </p>
+              <p className="text-sm mt-1">This may take 30-60 seconds</p>
+            </div>
+          )}
           <Button
             size="lg"
             className="w-full md:w-auto min-w-[200px]"
