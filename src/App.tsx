@@ -13,6 +13,8 @@ import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
 import { SizeMeasurementPage } from "./pages/SizeMeasurementPage";
 import { CheckSizePage } from "./pages/CheckSizePage";
+import { HowItWorksPage } from "./pages/HowItWorksPage";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Layout wrapper to conditionally hide Navbar on auth pages
 function Layout() {
@@ -20,7 +22,7 @@ function Layout() {
   const isAuthPage = ["/signin", "/signup"].includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors">
       {!isAuthPage && <Navbar />}
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -31,6 +33,7 @@ function Layout() {
         <Route path="/result" element={<ResultPage />} />
         <Route path="/measure" element={<SizeMeasurementPage />} />
         <Route path="/check-size" element={<CheckSizePage />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
       </Routes>
     </div>
   );
@@ -38,9 +41,11 @@ function Layout() {
 
 function App() {
   return (
-    <Router>
-      <Layout />
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Layout />
+      </Router>
+    </ThemeProvider>
   );
 }
 
