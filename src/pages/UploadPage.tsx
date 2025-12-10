@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImageUpload } from "../components/ImageUpload";
 import { Button } from "../components/ui/Button";
@@ -9,6 +9,15 @@ import demoOutfitImg from "../assets/red_sweater.png"; // or .png
 // Demo images - you can replace these URLs with your actual demo images
 const DEMO_PERSON_IMAGE = demoPersonImg;
 const DEMO_OUTFIT_IMAGE = demoOutfitImg;
+
+// Loading messages that rotate during generation
+const LOADING_MESSAGES = [
+  "Analyzing your photo…",
+  "Preparing garment…",
+  "Generating AI try-on…",
+  "Finalizing details…",
+];
+
 export function UploadPage() {
   const navigate = useNavigate();
   const [userImage, setUserImage] = useState<string | null>(null);
@@ -17,6 +26,7 @@ export function UploadPage() {
   const [outfitFile, setOutfitFile] = useState<File | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
 
   const dataURLtoFile = (dataurl: string, filename: string) => {
     const arr = dataurl.split(",");
@@ -92,6 +102,20 @@ export function UploadPage() {
       setError("Failed to load demo images. Please try uploading your own.");
     }
   };
+
+  // Rotate loading messages every 3.5 seconds
+  useEffect(() => {
+    if (!isGenerating) {
+      setLoadingMessageIndex(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   const handleGenerate = async () => {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
@@ -190,10 +214,13 @@ export function UploadPage() {
             </div>
           )}
           {isGenerating && (
-            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800 max-w-md text-center transition-colors">
-              <p className="font-medium">
-                Please wait, we're creating your virtual try-on...
-              </p>
+            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-800 max-w-md text-center transition-colors animate-fade-in">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="animate-spin text-2xl">⏳</span>
+                <p className="font-medium text-lg">
+                  {LOADING_MESSAGES[loadingMessageIndex]}
+                </p>
+              </div>
               <p className="text-sm mt-1">This may take 30-60 seconds</p>
             </div>
           )}
