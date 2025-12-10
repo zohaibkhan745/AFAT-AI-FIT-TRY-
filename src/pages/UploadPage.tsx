@@ -2,13 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImageUpload } from "../components/ImageUpload";
 import { Button } from "../components/ui/Button";
-import { Wand2, Sparkles } from "lucide-react";
-import demoPersonImg from "../assets/full body gemini.png"; // or .png
-import demoOutfitImg from "../assets/red_sweater.png"; // or .png
+import { Wand2, Sparkles, Image as ImageIcon } from "lucide-react";
+import demoPerson1Img from "../assets/zohaib image.jpg";
+import demoPerson2Img from "../assets/full body gemini.png";
+import demoOutfitImg from "../assets/red_sweater.png";
 
-// Demo images - you can replace these URLs with your actual demo images
-const DEMO_PERSON_IMAGE = demoPersonImg;
-const DEMO_OUTFIT_IMAGE = demoOutfitImg;
+// Demo images
+const DEMO_SETS = [
+  { person: demoPerson1Img, outfit: demoOutfitImg, name: "Demo 1" },
+  { person: demoPerson2Img, outfit: demoOutfitImg, name: "Demo 2" },
+];
 
 // Loading messages that rotate during generation
 const LOADING_MESSAGES = [
@@ -27,6 +30,15 @@ export function UploadPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
+  // Load demo images on mount if demo parameter is present
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const demoParam = params.get("demo");
+    if (demoParam === "1") {
+      loadDemoImages(0); // Load Demo 1
+    }
+  }, []);
 
   const dataURLtoFile = (dataurl: string, filename: string) => {
     const arr = dataurl.split(",");
@@ -64,9 +76,10 @@ export function UploadPage() {
     }
   };
 
-  const loadDemoImages = async () => {
+  const loadDemoImages = async (demoIndex: number) => {
     try {
       setError(null);
+      const demo = DEMO_SETS[demoIndex];
 
       // Helper function to convert blob to data URL
       const blobToDataURL = (blob: Blob): Promise<string> => {
@@ -79,14 +92,14 @@ export function UploadPage() {
       };
 
       // Fetch and convert person image
-      const personResponse = await fetch(DEMO_PERSON_IMAGE);
+      const personResponse = await fetch(demo.person);
       if (!personResponse.ok) throw new Error("Failed to fetch person image");
       const personBlob = await personResponse.blob();
       const personDataURL = await blobToDataURL(personBlob);
       const personFile = dataURLtoFile(personDataURL, "demo-person.png");
 
       // Fetch and convert outfit image
-      const outfitResponse = await fetch(DEMO_OUTFIT_IMAGE);
+      const outfitResponse = await fetch(demo.outfit);
       if (!outfitResponse.ok) throw new Error("Failed to fetch outfit image");
       const outfitBlob = await outfitResponse.blob();
       const outfitDataURL = await blobToDataURL(outfitBlob);
@@ -174,18 +187,29 @@ export function UploadPage() {
           </p>
         </div>
 
-        {/* Demo Images Button */}
-        <div className="mb-8 flex justify-center">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={loadDemoImages}
-            className="gap-2"
-          >
-            <Sparkles className="h-4 w-4" />
-            <span className="hidden sm:inline">Try with Demo Images</span>
-            <span className="sm:hidden">Demo Images</span>
-          </Button>
+        {/* Demo Images Buttons */}
+        <div className="mb-10 flex flex-col items-center gap-4">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-2">
+            <ImageIcon className="h-5 w-5" />
+            <p className="text-sm font-medium">Quick Start - Try Demo Images</p>
+          </div>
+          <div className="flex flex-wrap gap-4 justify-center">
+            {DEMO_SETS.map((demo, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                size="lg"
+                onClick={() => loadDemoImages(index)}
+                className="gap-3 px-6 py-6 text-base font-semibold border-2 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-300 shadow-md hover:shadow-xl"
+              >
+                <Sparkles className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <span>{demo.name}</span>
+              </Button>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+            Click a demo to instantly load sample images and test the try-on feature
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">

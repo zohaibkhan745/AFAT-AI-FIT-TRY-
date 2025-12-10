@@ -35,6 +35,12 @@ export function HomePage() {
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
+            <Link to="/upload?demo=1">
+              <Button size="lg" variant="outline" className="group border-2 hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-900/20">
+                <Sparkles className="mr-2 w-5 h-5 text-purple-600 dark:text-purple-400" />
+                Try Demo
+              </Button>
+            </Link>
           </div>
 
           {/* Feature Pills */}
